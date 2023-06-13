@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Data.Interfaces
+{
+    public interface IContactRepository
+    {
+        void CreateContact(string nome);
+        List<string> GetContacts();
+        void UpdateContact();
+        void DeleteContact();
+    }
+}
