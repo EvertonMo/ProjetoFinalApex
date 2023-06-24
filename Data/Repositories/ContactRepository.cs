@@ -1,4 +1,6 @@
-﻿using Data.Interfaces;
+﻿using Data.DataBaseConnection;
+using Data.Interfaces;
+using Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +11,33 @@ namespace Data.Repositories
 {
     public class ContactRepository : IContactRepository
     {
-        public void CreateContact(string nome)
+        public ApiDbContext DbContext { get; set; }
+
+        public ContactRepository(ApiDbContext dbContext)
         {
-            
+            DbContext = dbContext;
         }
 
-        public void DeleteContact()
+        public void CreateContact(Contact contact)
         {
-            
+
+            DbContext.Contacts.Add(contact);
         }
 
-        public List<string> GetContacts()
+        public void DeleteContact(Contact contact)
         {
-            return new List<string>() { "Tio Nal", "Tia Zene", "Vô Eraldo" };
+            DbContext.
+                Contacts.Remove(contact);
         }
 
-        public void UpdateContact()
+        public List<Contact> GetContacts()
         {
-            
+            return DbContext.Contacts.ToList();
+        }
+
+        public void UpdateContact(Contact contact)
+        {
+            DbContext.Contacts.Update(contact);
         }
     }
 }

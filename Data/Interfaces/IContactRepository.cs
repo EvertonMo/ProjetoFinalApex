@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace Data.Interfaces
 {
     public interface IContactRepository
     {
-        void CreateContact(string nome);
-        List<string> GetContacts();
-        void UpdateContact();
-        void DeleteContact();
+        void CreateContact(Contact contact);
+        List<Contact> GetContacts();
+        void UpdateContact(Contact contact);
+        void DeleteContact(Contact contact);
     }
 }
