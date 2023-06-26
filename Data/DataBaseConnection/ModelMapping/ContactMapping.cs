@@ -23,7 +23,7 @@ namespace Data.DataBaseConnection.ModelMapping
             
             builder.HasOne(contact => contact.User)
                 .WithMany(user => user.Contacts)
-                .HasForeignKey(contact => contact.User.Id)
+                .HasForeignKey(contact => contact.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
