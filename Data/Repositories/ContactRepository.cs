@@ -1,43 +1,55 @@
 ﻿using Data.DataBaseConnection;
 using Data.Interfaces;
 using Data.Models;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
     public class ContactRepository : IContactRepository
     {
-        public ApiDbContext DbContext { get; set; }
+        public ApiDbContext _dbContext;
 
         public ContactRepository(ApiDbContext dbContext)
         {
-            DbContext = dbContext;
+            _dbContext = dbContext;
         }
 
-        public void CreateContact(Contact contact)
+        public async Task CreateAsync(Contact contact)
         {
 
-            DbContext.Contacts.Add(contact);
+           await _dbContext.Contacts.AddAsync(contact);
+            
         }
 
-        public void DeleteContact(Contact contact)
+        public void Delete(Contact contact)
         {
-            DbContext.
+            _dbContext.
                 Contacts.Remove(contact);
+            
         }
 
-        public List<Contact> GetContacts()
+        public async Task<List<Contact>> GetAllAsync()
         {
-            return DbContext.Contacts.ToList();
+            return await _dbContext.Contacts.ToListAsync();
         }
 
-        public void UpdateContact(Contact contact)
+        public async Task<Contact> GetByIdAsync(int id)
         {
-            DbContext.Contacts.Update(contact);
+            return await _dbContext.
+                    Contacts.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public void Update(Contact contact)
+        {
+            _dbContext.Contacts.Update(contact);
+            
+        }
+        public async Task SaveChangeAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using Data.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Ultils.Dtos.Contact;
 
 namespace Services.Interfaces
 {
     public interface IContactService
     {
-        void CreateContact(Contact contact);
-        List<Contact> GetContacts();
-        void UpdateContact(Contact contact);
-        void DeleteContact(Contact contact);
+        Task<bool> CreateAsync(ContactCreatRequestDto contactCreateDto);
+        Task<List<ContactResponseDto>> GetAllAsync();
+        Task<bool> UpdateAsync(ContactUpdateRequestDto contactUpdateDto);
+        Task<bool> DeleteAsync(int id);
     }
 }
 

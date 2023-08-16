@@ -9,9 +9,11 @@ namespace Data.Interfaces
 {
     public interface IContactRepository
     {
-        void CreateContact(Contact contact);
-        List<Contact> GetContacts();
-        void UpdateContact(Contact contact);
-        void DeleteContact(Contact contact);
+        Task CreateAsync(Contact contact);
+        Task<List<Contact>> GetAllAsync();
+        Task<Contact> GetByIdAsync(int id);
+        void Update(Contact contact);
+        void Delete(Contact contact);
+        Task SaveChangeAsync();
     }
 }

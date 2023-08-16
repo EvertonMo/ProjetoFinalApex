@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Ultils\Ultils.csproj" />
+    <Folder Include="Api\" />
+    <Folder Include="Dtos\Auth\" />
   </ItemGroup>
 
 </Project>

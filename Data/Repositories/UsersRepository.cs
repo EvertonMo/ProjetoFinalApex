@@ -1,6 +1,7 @@
 ﻿using Data.DataBaseConnection;
 using Data.Interfaces;
 using Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,38 +12,54 @@ namespace Data.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-        public ApiDbContext DbContext { get; set; }
+        private readonly ApiDbContext _dbContext;
 
         public UsersRepository(ApiDbContext dbContext)
         {
-            DbContext = dbContext;
+            _dbContext = dbContext;
         }
 
-        public void CreateUser(User user)
+        public async Task CreateAsync(User user)
         {
 
-            DbContext.Users.Add(user);
+            await _dbContext.Users.AddAsync(user);
 
-            DbContext.SaveChanges();
         }
 
-        public void DeleteUser(User user)
+        public async Task<User> GetByEmalandPasswordAsync(string email, string password)
         {
-            DbContext.
-                Users.Remove(user);
-            DbContext.SaveChanges();
+            return await _dbContext.
+                    Users.FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
         }
 
-        public List<User> GetUsers()
+        public void Delete(User user)
         {
-            return DbContext.Users.ToList();
+            
+            _dbContext.Users.Remove(user);
+           
         }
 
-        
-        public void UpdateUser(User user)
+        public async Task<List<User>> GetAllAsync()
         {
-            DbContext.Users.Update(user);
-            DbContext.SaveChanges();
+            return await _dbContext.Users.Include(usuarios => usuarios.Contacts).ToListAsync();
+        }
+
+        public async Task<User> GetByIdAsync(int id)
+        {
+            return await _dbContext.
+                    Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+
+        public void Update(User user)
+        {
+            _dbContext.Users.Update(user);
+            
+        }
+
+        public async Task SaveChangeAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

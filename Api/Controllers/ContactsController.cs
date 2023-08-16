@@ -1,8 +1,11 @@
-﻿using Data.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.ApiServices;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Ultils.Api;
+using Ultils.Dtos.Contact;
 
 namespace Api.Controllers
 {
@@ -10,34 +13,95 @@ namespace Api.Controllers
     [Route("[controller]")]
     public class ContactsController : ControllerBase
     {
-        public IContactService ContactService; 
+        private readonly IContactService _contactService; 
         
         public ContactsController(IContactService contactService)
         {
-            ContactService = contactService;
+            _contactService = contactService;
         }
+
         [HttpGet]
-        public List<Contact> Get()
+        public async Task<IActionResult> GetAllContacts()
         {
-            return ContactService.GetContacts();
+            try
+            {
+                var result = await _contactService.GetAllAsync();
+
+                return Ok(new ApiResponse<List<ContactResponseDto>>(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(ex.Message));
+            }
         }
 
         [HttpPost]
-        public void Post([FromBody] Contact contact)
+        public async Task<IActionResult> CreateNewContact([FromBody] ContactCreatRequestDto contactDto)
         {
-            ContactService.CreateContact(contact);
+            try
+            {
+                var success = await _contactService.CreateAsync(contactDto);
+                if (success == true)
+                {
+                    return Ok(new ApiResponse());
+                }
+                else
+                {
+                    return BadRequest(new ApiResponse("User Id not found."));
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(ex.Message));
+            }
         }
 
         [HttpPut]
-        public void Put([FromBody]Contact contact)
+        public async Task<IActionResult> UpdateContact([FromBody] ContactUpdateRequestDto contactDto)
         {
-            ContactService.UpdateContact(contact);
+            try
+            {
+                var success = await _contactService.UpdateAsync(contactDto);
+
+                if (success == true)
+                {
+                    return Ok(new ApiResponse());
+                }
+                else
+                {
+                    return BadRequest(new ApiResponse("User Id not found."));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(ex.Message));
+            }
         }
 
-        [HttpDelete]
-        public void Delete([FromBody] Contact contact)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteContact([FromRoute] int id)
         {
-            ContactService.DeleteContact(contact);
+            try
+            {
+                var success = await _contactService.DeleteAsync(id);
+
+                if (success == true)
+                {
+                    return Ok(new ApiResponse());
+                }
+                else
+                {
+                    return BadRequest(new ApiResponse("User Id not found."));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(ex.Message));
+            }
+
         }
     }
 }

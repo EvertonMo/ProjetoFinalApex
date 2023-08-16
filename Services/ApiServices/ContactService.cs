@@ -1,36 +1,95 @@
 ﻿using Data.Interfaces;
 using Data.Models;
+using Data.Repositories;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Ultils.Dtos.Contact;
 
 namespace Services.ApiServices
 {
     public class ContactService : IContactService
     {
-        public IContactRepository ContactRepository;
+        private readonly IContactRepository _contactRepository;
+        private readonly IUsersRepository _usersRepository;
 
-        public ContactService(IContactRepository contactRepository)
+        public ContactService(
+            IContactRepository contactRepository, 
+            IUsersRepository usersRepository)
         {
-            ContactRepository = contactRepository;
+            _contactRepository = contactRepository;
+            _usersRepository = usersRepository;
         }
-        public void CreateContact(Contact contact)
+        public async Task<bool> CreateAsync(ContactCreatRequestDto contactCreatDto)
         {
-           ContactRepository.CreateContact(contact);
+            var user =await _usersRepository.GetByIdAsync(contactCreatDto.UserId);
+
+            if (user != null)
+            {
+                var contact = new Contact()
+                {
+                    Name = contactCreatDto.Name,
+                    Phone = contactCreatDto.Phone,
+                    UserId = contactCreatDto.UserId,
+                    CreadAt = DateTime.Now
+                };
+                await _contactRepository.CreateAsync(contact);
+                await _contactRepository.SaveChangeAsync();
+                return true;
+            }
+            return false;
         }
 
-        public void DeleteContact(Contact contact)
+        public async Task<bool> DeleteAsync(int id)
         {
-            ContactRepository.DeleteContact(contact);
+            var contact =await _contactRepository.GetByIdAsync(id);
+
+            if (contact != null)
+            {
+                _contactRepository.Delete(contact);
+                await _contactRepository.SaveChangeAsync();
+                return true;
+            }
+            return false;
         }
 
-        public List<Contact> GetContacts()
+
+            public async Task<List<ContactResponseDto>> GetAllAsync()
         {
-            return ContactRepository.GetContacts();
+            var contacts =await _contactRepository.GetAllAsync();
+            var contactDtos = new List<ContactResponseDto>();
+
+            foreach (var contactModel in contacts)
+            {
+                contactDtos.Add(new ContactResponseDto()
+                {
+                    Id = contactModel.Id,
+                    Name = contactModel.Name,
+                    Phone = contactModel.Phone,
+                    UserId = contactModel.UserId
+                });
+            }
+            return contactDtos;
         }
 
-        public void UpdateContact(Contact contact)
+        public async Task<bool> UpdateAsync(ContactUpdateRequestDto contactUpdateDto)
         {
-            ContactRepository.UpdateContact(contact);
+            var contactFound =await _contactRepository.GetByIdAsync(contactUpdateDto.Id);
+
+            if (contactFound != null)
+            {
+                contactFound.Name = contactUpdateDto.Name;
+                contactFound.Phone = contactUpdateDto.Phone;
+
+                contactFound.UpdateAt = DateTime.Now;
+
+                _contactRepository.Update(contactFound);
+                await _contactRepository.SaveChangeAsync();
+                return true;
+            }
+            return false;
         }
     }
 }
