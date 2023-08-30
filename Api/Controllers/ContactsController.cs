@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.ApiServices;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 using Ultils.Api;
 using Ultils.Dtos.Contact;
@@ -20,12 +23,15 @@ namespace Api.Controllers
             _contactService = contactService;
         }
 
+        [Authorize(Policy = "Consumer")]
         [HttpGet]
-        public async Task<IActionResult> GetAllContacts()
+        public async Task<IActionResult> GetAllUserContacts()
         {
             try
             {
-                var result = await _contactService.GetAllAsync();
+                int userId = GetUserIdFromRequest();
+
+                var result = await _contactService.GetAllByUserIdAsync(userId);
 
                 return Ok(new ApiResponse<List<ContactResponseDto>>(result));
             }
@@ -35,6 +41,9 @@ namespace Api.Controllers
             }
         }
 
+        
+
+        [Authorize(Policy = "Consumer")]
         [HttpPost]
         public async Task<IActionResult> CreateNewContact([FromBody] ContactCreatRequestDto contactDto)
         {
@@ -57,6 +66,7 @@ namespace Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Consumer")]
         [HttpPut]
         public async Task<IActionResult> UpdateContact([FromBody] ContactUpdateRequestDto contactDto)
         {
@@ -80,6 +90,7 @@ namespace Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Consumer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact([FromRoute] int id)
         {
@@ -102,6 +113,18 @@ namespace Api.Controllers
                 return BadRequest(new ApiResponse(ex.Message));
             }
 
+        }
+
+        private int GetUserIdFromRequest()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            var nameIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid");
+
+            var userId = int.Parse(nameIdClaim.Value);
+            return userId;
         }
     }
 }

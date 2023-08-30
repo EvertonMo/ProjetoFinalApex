@@ -56,9 +56,9 @@ namespace Services.ApiServices
         }
 
 
-            public async Task<List<ContactResponseDto>> GetAllAsync()
+            public async Task<List<ContactResponseDto>> GetAllByUserIdAsync(int userId)
         {
-            var contacts =await _contactRepository.GetAllAsync();
+            var contacts =await _contactRepository.GetAllByUserIdAsync(userId);
             var contactDtos = new List<ContactResponseDto>();
 
             foreach (var contactModel in contacts)

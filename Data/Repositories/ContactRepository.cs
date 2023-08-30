@@ -31,9 +31,9 @@ namespace Data.Repositories
             
         }
 
-        public async Task<List<Contact>> GetAllAsync()
+        public async Task<List<Contact>> GetAllByUserIdAsync(int userId)
         {
-            return await _dbContext.Contacts.ToListAsync();
+            return await _dbContext.Contacts.Where(contact => contact.UserId == userId).ToListAsync();
         }
 
         public async Task<Contact> GetByIdAsync(int id)

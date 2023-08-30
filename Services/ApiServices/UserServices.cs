@@ -39,6 +39,7 @@ namespace Services.ApiServices
             if (user != null) 
             {
             _userRepository.Delete(user);
+                await _userRepository.SaveChangeAsync();
           
                 return true;
             }

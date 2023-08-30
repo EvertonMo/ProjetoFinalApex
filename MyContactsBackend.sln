@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{0BE1EB37-FAE1-4DA0-AD4F-8F85EE54F1F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultils", "Ultils\Ultils.csproj", "{C8426F76-8B95-4825-A987-1E4F0879FCF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultils", "Ultils\Ultils.csproj", "{C8426F76-8B95-4825-A987-1E4F0879FCF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{7B6644AB-796C-4323-9822-891AEB1BDD1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C8426F76-8B95-4825-A987-1E4F0879FCF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8426F76-8B95-4825-A987-1E4F0879FCF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8426F76-8B95-4825-A987-1E4F0879FCF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B6644AB-796C-4323-9822-891AEB1BDD1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B6644AB-796C-4323-9822-891AEB1BDD1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B6644AB-796C-4323-9822-891AEB1BDD1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B6644AB-796C-4323-9822-891AEB1BDD1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
